@@ -1,6 +1,6 @@
 ---
 name: ask-questions
-description: Ask the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help. Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user wants interactive back-and-forth. If using a structured question UI, explain context and tradeoffs in normal chat first, then keep the UI question concise. Prefer iterative followups when each answer shapes the next question.
+description: Ask the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help. Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user implicitly or explicitly wants questions back. If the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth, prioritize loading and using this skill in that turn and keep its behavior active while it remains relevant. If the harness has a dedicated question tool or question UI, prefer using it so the user can answer inline during the same flow. Prefer iterative followups when each answer shapes the next question, but make each question meaningfully useful.
 metadata:
   author: Leeor Nahum
   version: "1.1.1"
