@@ -1,9 +1,9 @@
 ---
 name: ask-questions
-description: Ask the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help. Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user implicitly or explicitly wants questions back. If the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth, prioritize loading and using this skill in that turn and keep its behavior active while it remains relevant. If the harness has a dedicated question tool or question UI, prefer using it so the user can answer inline during the same flow. Prefer iterative followups when each answer shapes the next question, but make each question meaningfully useful.
+description: Ask the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help. Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user implicitly or explicitly wants questions back. If the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth, prioritize loading and using this skill in that turn and keep its behavior active while it remains relevant. If the harness has a dedicated question tool or question UI, prefer using it so the user can answer inline during the same flow. Default to a single question per turn and never ask more than two at once; prefer iterative followups where each answer shapes the next question, and make each question meaningfully useful.
 metadata:
   author: Leeor Nahum
-  version: "1.1.1"
+  version: "1.2.0"
 ---
 
 # Ask Questions
@@ -12,25 +12,25 @@ Ask questions earlier and more often than most agents do.
 
 Do it especially when:
 
-- you are unsure
-- the task is unclear
-- you want to confirm before proceeding
-- several paths remain
-- you hit a genuine blocker the user can resolve
-- the user seems to want collaborative back-and-forth
-- the user directly or indirectly wants questions back
+- You are unsure
+- The task is unclear
+- You want to confirm before proceeding
+- Several paths remain
+- You hit a genuine blocker the user can resolve
+- The user seems to want collaborative back-and-forth
+- The user directly or indirectly wants questions back
 
-Ask as many or as few questions as needed, but make each one count.
+Ask as many questions as the work genuinely needs, and make each one count. The limit is per turn, not overall: never put more than two questions in a single turn or tool call, and prefer just one. Ask the most decision-shaping question first, let the answer guide the next, and keep asking as long as questions remain useful.
 
 If the user explicitly mentions this skill, references asking questions, or asks for a more questioning style, treat that as a strong signal to load this skill immediately and actively use it.
 
-When that happens, keep this behavior active through the rest of the thread for as long as it remains relevant.
+Once active, you own this behavior for the rest of the thread. The user should not have to restate it. Keep using the question tool and the one-to-two limit at every decision point for as long as it remains relevant.
 
 Bad questioning usually fails in three ways:
 
-- asking too rarely and guessing wrong instead
-- asking too late, after avoidable wrong work
-- asking low-value questions that make the user solve an under-explained problem
+- Asking too rarely and guessing wrong instead
+- Asking too late, after avoidable wrong work
+- Asking low-value questions that make the user solve an under-explained problem
 
 ## Core Principle
 
@@ -40,45 +40,47 @@ Do not make the user answer a question that you have not framed well enough to a
 
 That means:
 
-- ask when the answer will change what you do
-- ask when confirmation will prevent avoidable wrong work
-- ask when the user would benefit from choosing among real options
-- do not ask just for the sake of asking
+- Ask when the answer will change what you do
+- Ask when confirmation will prevent avoidable wrong work
+- Ask when the user would benefit from choosing among real options
+- Do not ask just for the sake of asking
 
 ## When To Ask
 
 Ask when the answer will materially change:
 
-- the architecture or plan
-- the scope of the work
-- the correctness of the output
-- the safety of the action
-- whether to proceed at all
-- which tradeoff the user actually prefers
+- The architecture or plan
+- The scope of the work
+- The correctness of the output
+- The safety of the action
+- Whether to proceed at all
+- Which tradeoff the user actually prefers
 
 Also ask when:
 
-- you are unsure enough that guessing would likely waste time
-- you want explicit confirmation before taking an important step
-- you run into a real issue that the user can fix, clarify, approve, or provide
-- the user appears to want an interactive questioning process
-- the user explicitly asks you to ask questions
-- a dedicated question tool would let the user answer immediately inline
+- You are unsure enough that guessing would likely waste time
+- You want explicit confirmation before taking an important step
+- You run into a real issue that the user can fix, clarify, approve, or provide
+- The user appears to want an interactive questioning process
+- The user explicitly asks you to ask questions
+- A dedicated question tool would let the user answer immediately inline
 
 Do not ask when the answer is already obvious enough to proceed safely.
 
 ## Context Before Question
 
-Before the user has to answer, provide a concise context dump in plain language:
+For any decision that carries a recommendation, options, or tradeoffs, explain it in the message text first, then ask. The explanation appears before the question, so the user reads it and answers informed.
 
-1. what you understand
-2. what is still unclear
-3. why the answer matters
-4. your recommendation, if you have one
+Before the question, lay out in plain language:
 
-Then ask the question.
+1. What you understand
+2. What is still unclear
+3. Why the answer matters
+4. Your recommendation, if you have one
 
-Do not drop the user directly into options with no framing unless the decision is truly trivial.
+Keep the question prompt itself lean: the decision and its options, nothing more. Context, tradeoffs, and the reasoning behind each option belong in the text, never crammed into the question prompt, no matter the harness. This keeps the prompt from overflowing and lets the user decide with the full picture already in view.
+
+This is the strong default for any real decision. A genuinely trivial one-liner does not need the full framing.
 
 ## Dedicated Question Tools
 
@@ -86,35 +88,35 @@ If the harness has a dedicated question tool, question UI, or inline answer mech
 
 Why:
 
-- the user can answer inline without waiting for a whole new turn
-- the decision stays attached to the current flow
-- structured answers can be faster and clearer when the options are real
-- the agent can continue immediately after the blocker is resolved
+- The user can answer inline without waiting for a whole new turn
+- The decision stays attached to the current flow
+- Structured answers can be faster and clearer when the options are real
+- The agent can continue immediately after the blocker is resolved
 
 If the harness does not have such a tool, ask conversationally.
 
-Do not stuff the full context dump into the structured question prompt. Explain the background, tradeoffs, and recommendation in normal chat first. Then use the question UI for the shortest clear decision the user needs to answer.
+Put the background, tradeoffs, and recommendation in the message text first. Then use the question prompt for the shortest clear decision the user needs to answer.
 
 ## What Makes A Good Question
 
 A good question is:
 
-- necessary
-- specific
-- easy to answer
-- decision-shaping
-- useful to the next step
-- grounded in the user's goal
-- framed so the user does not need to reverse-engineer your confusion
+- Necessary
+- Specific
+- Easy to answer
+- Decision-shaping
+- Useful to the next step
+- Grounded in the user's goal
+- Framed so the user does not need to reverse-engineer your confusion
 
 A bad question is:
 
-- vague
-- generic
-- premature
-- fake
-- asked only to appear collaborative
-- broad enough that the user has to do your planning for you
+- Vague
+- Generic
+- Premature
+- Fake
+- Asked only to appear collaborative
+- Broad enough that the user has to do your planning for you
 
 ## Preferred Question Shapes
 
@@ -135,37 +137,33 @@ The user should not have to infer your best judgment from the shape of the optio
 
 If you use a dedicated question tool or structured question UI:
 
-- use it when the answer space is genuinely constrained
-- include enough context before the options
-- make the options distinct in consequence, not just wording
-- keep the options understandable and easy to scan
-- avoid fake choices and duplicate choices
-- ask multiple questions only when the batch is actually helpful
+- Use it when the answer space is genuinely constrained
+- Include enough context before the options
+- Make the options distinct in consequence, not just wording
+- Keep the options understandable and easy to scan
+- Avoid fake choices and duplicate choices
+- Ask at most two questions at once, and only when both are independent and cheap to answer; prefer one
 
 ## Option Design
 
 When offering options:
 
-- write them in user-facing terms
-- include a recommended default when appropriate
-- avoid forcing a binary if a hybrid or defer path is more honest
-- do not make the user choose a standard or implementation shape when the real question is about outcome or priority
+- Write them in user-facing terms
+- Include a recommended default when appropriate
+- Avoid forcing a binary if a hybrid or defer path is more honest
+- Do not make the user choose a standard or implementation shape when the real question is about outcome or priority
 
 Good options reduce cognitive load.
 
 Bad options expose unfinished reasoning.
 
-## One Question Or Many
+## How Many Questions
 
-Ask one question when later questions depend on the answer.
+Default to a single question per turn. That is the strong preference.
 
-Ask a small batch when the questions are independent and the user benefits from answering them together.
+Ask a second question in the same turn only when both are genuinely independent, both are cheap to answer, and the pair does not become a form to decipher. Never ask more than two at once, whether in a tool call or in prose.
 
-If a dedicated question tool makes batching easier, that is useful only if the batch is still coherent and easy to answer.
-
-If a batch would feel like a form the user has to decipher, break it up.
-
-Prefer iterative followups when the user's answer will reshape the next question. A good interactive sequence can ask one or two questions at a time, reflect the answer, narrow the uncertainty, then ask the next decision. Do not pre-generate a long form just because you can imagine twenty possible questions.
+Asking many questions over the course of the work is good and encouraged. The limit is only on how many land in one turn. Sequence them: ask the one whose answer most reshapes the rest, listen, then dig deeper with the next. A real interview asks, hears the answer, and follows the thread, rather than handing over a fixed list of ten to fill out all at once.
 
 ## Good Defaults
 
@@ -173,24 +171,24 @@ If you can proceed safely with a reasonable assumption, you may do so.
 
 When that happens:
 
-- state the assumption
-- explain it briefly
-- continue
-- invite correction if needed
+- State the assumption
+- Explain it briefly
+- Continue
+- Invite correction if needed
 
 Questions are for meaningful uncertainty, not for avoiding responsibility.
 
 ## Failure Modes To Avoid
 
-- asking too rarely and guessing wrong instead
-- asking too late, after avoidable work has already happened
-- asking too early with no useful framing
-- asking low-value questions that do not affect the outcome
-- asking questions just because a question tool exists
-- failing silently when blocked instead of asking for the missing input or fix
-- using structured options without enough context
-- forcing the user into under-explained choices
-- making the user answer a design problem you should have framed better
+- Asking too rarely and guessing wrong instead
+- Asking too late, after avoidable work has already happened
+- Asking too early with no useful framing
+- Asking low-value questions that do not affect the outcome
+- Asking questions just because a question tool exists
+- Failing silently when blocked instead of asking for the missing input or fix
+- Using structured options without enough context
+- Forcing the user into under-explained choices
+- Making the user answer a design problem you should have framed better
 
 ## Blocker Rule
 
@@ -198,19 +196,19 @@ If you hit a genuine blocker and the user could plausibly unblock it, ask immedi
 
 Examples:
 
-- missing approval
-- missing credentials, access, or permissions
-- conflicting instruction or unclear requirement
-- missing file, environment value, or dependency choice
-- an unexpected state the user can explain or fix
+- Missing approval
+- Missing credentials, access, or permissions
+- Conflicting instruction or unclear requirement
+- Missing file, environment value, or dependency choice
+- An unexpected state the user can explain or fix
 
 Do not stall, guess wildly, or stop without surfacing the blocker clearly.
 
 Briefly explain:
 
-1. what blocked you
-2. what the user can do or answer
-3. what will happen once they respond
+1. What blocked you
+2. What the user can do or answer
+3. What will happen once they respond
 
 ## Response Pattern
 
