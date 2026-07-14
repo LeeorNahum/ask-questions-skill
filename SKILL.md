@@ -1,9 +1,9 @@
 ---
 name: "ask-questions"
-description: "Ask the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help. Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user implicitly or explicitly wants questions back. If the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth, prioritize loading and using this skill in that turn and keep its behavior active while it remains relevant. If the harness has a dedicated question tool or question UI, prefer using it so the user can answer inline during the same flow. Default to a single question per turn and never ask more than two at once; prefer iterative followups where each answer shapes the next question, and make each question meaningfully useful."
+description: "Ask the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help. Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user implicitly or explicitly wants questions back. If the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth, prioritize loading and using this skill in that turn and keep its behavior active while it remains relevant. If the harness has a dedicated question tool or question UI, prefer using it so the user can answer inline during the same flow. Default to a single question per turn and never ask more than two at once. Prefer iterative followups where each answer shapes the next question, and make each question meaningfully useful."
 metadata:
   author: "Leeor Nahum"
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 # Ask Questions
@@ -142,7 +142,7 @@ If you use a dedicated question tool or structured question UI:
 - Make the options distinct in consequence, not just wording
 - Keep the options understandable and easy to scan
 - Avoid fake choices and duplicate choices
-- Ask at most two questions at once, and only when both are independent and cheap to answer; prefer one
+- Ask at most two questions at once, and only when both are independent and cheap to answer. Prefer one
 
 ## Option Design
 
