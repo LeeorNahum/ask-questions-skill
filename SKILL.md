@@ -1,9 +1,9 @@
 ---
 name: "ask-questions"
-description: "Ask the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help. Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user implicitly or explicitly wants questions back. If the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth, prioritize loading and using this skill in that turn and keep its behavior active while it remains relevant. If the harness has a dedicated question tool or question UI, prefer using it so the user can answer inline during the same flow. Default to a single question per turn and never ask more than two at once. Prefer iterative followups where each answer shapes the next question, and make each question meaningfully useful."
+description: "Ask the user a question instead of guessing, and ask it through the harness's tool for asking the user a question whenever one exists, so they can answer inline in the same flow. Use whenever requirements are unclear, several paths remain, confidence is low, a real blocker appears that the user could resolve, or an important or hard-to-reverse step needs confirmation before you take it. Also use when a flow reaches a step only the user can perform, such as a sign-in or an approval, so the pause keeps the work in the same turn instead of ending it. If the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth, load it immediately and keep its behavior active while it remains relevant."
 metadata:
   author: "Leeor Nahum"
-  version: "1.2.1"
+  version: "1.3.0"
 ---
 
 # Ask Questions
@@ -82,9 +82,9 @@ Keep the question prompt itself lean: the decision and its options, nothing more
 
 This is the strong default for any real decision. A genuinely trivial one-liner does not need the full framing.
 
-## Dedicated Question Tools
+## The Question Tool
 
-If the harness has a dedicated question tool, question UI, or inline answer mechanism, prefer using it when the question is real and useful.
+If the harness provides a tool for asking the user a question, a question UI, or any inline answer mechanism, ask through it rather than in prose whenever the question is real and useful. Prose is the fallback for harnesses without one, not an equal alternative.
 
 Why:
 
@@ -96,6 +96,10 @@ Why:
 If the harness does not have such a tool, ask conversationally.
 
 Put the background, tradeoffs, and recommendation in the message text first. Then use the question prompt for the shortest clear decision the user needs to answer.
+
+Use it to hand off, not only to decide. When a flow reaches a step only the user can perform, such as signing in, authorizing, or paying, do everything possible up to that point and then ask, so the handoff stays inside the same flow. Ending the turn and waiting silently drops the thread and makes the user restart it.
+
+Do not spend it on what you can check yourself. If the answer is observable through a tool you already have, look. Asking the user to report something you could read is the low-value question this skill exists to prevent.
 
 ## What Makes A Good Question
 
