@@ -6,18 +6,27 @@ Rules for editing the **ask-questions** skill. User-facing guidance lives in `SK
 
 | File | Role |
 | --- | --- |
-| `SKILL.md` | When to ask, question shapes, structured question rules, response pattern, blocker rule |
+| `SKILL.md` | When to ask, context before the question, question shapes, structured question rules, the per-turn limit, blocker rule |
 | `README.md` | Short human summary |
 
 ## Editing
 
-- Bump `metadata.version` with semver in the same change whenever behavior changes: patch for wording, minor for new guidance or a new question shape, major for a changed turn-limit or scope.
+- Bump `metadata.version` by the release-versioning skill's rules for skills.
 - Quote every frontmatter string value. Keys stay unquoted.
 - No em dashes, and no semicolons used to join what should be separate sentences. Use commas, periods, parentheses, or "to".
 - Capitalized bullets and parallel list voice.
-- Keep the one-question default and two-question hard cap intact in every place that states it (description and body). Do not loosen it without updating both.
+- The one-question default and two-question hard cap are stated once, in How Many Questions. Other sections point there instead of restating them. Do not loosen the cap without a major version bump.
+
+## Design notes
+
+A dedicated question tool is preferred because:
+
+- The user can answer inline without waiting for a whole new turn
+- The decision stays attached to the current flow
+- Structured answers can be faster and clearer when the options are real
+- The agent can continue immediately after the blocker is resolved
 
 ## Before finishing
 
-- `metadata.version` bumped if and only if behavior changed.
+- `metadata.version` bumped as the release-versioning skill requires.
 - `README.md` matches the actual file layout.

@@ -1,9 +1,9 @@
 ---
 name: "ask-questions"
-description: "Ask the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help. Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user implicitly or explicitly wants questions back. If the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth, prioritize loading and using this skill in that turn and keep its behavior active while it remains relevant. If the harness has a dedicated question tool or question UI, prefer using it so the user can answer inline during the same flow. Default to a single question per turn and never ask more than two at once. Prefer iterative followups where each answer shapes the next question, and make each question meaningfully useful."
+description: "Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user implicitly or explicitly wants questions back, and load it in that turn when the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth. Asks the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help."
 metadata:
   author: "Leeor Nahum"
-  version: "1.2.1"
+  version: "1.2.2"
 ---
 
 # Ask Questions
@@ -20,17 +20,11 @@ Do it especially when:
 - The user seems to want collaborative back-and-forth
 - The user directly or indirectly wants questions back
 
-Ask as many questions as the work genuinely needs, and make each one count. The limit is per turn, not overall: never put more than two questions in a single turn or tool call, and prefer just one. Ask the most decision-shaping question first, let the answer guide the next, and keep asking as long as questions remain useful.
+Ask as many questions as the work genuinely needs, and make each one count. Keep asking as long as questions remain useful.
 
 If the user explicitly mentions this skill, references asking questions, or asks for a more questioning style, treat that as a strong signal to load this skill immediately and actively use it.
 
-Once active, you own this behavior for the rest of the thread. The user should not have to restate it. Keep using the question tool and the one-to-two limit at every decision point for as long as it remains relevant.
-
-Bad questioning usually fails in three ways:
-
-- Asking too rarely and guessing wrong instead
-- Asking too late, after avoidable wrong work
-- Asking low-value questions that make the user solve an under-explained problem
+Once active, you own this behavior for the rest of the thread. The user should not have to restate it. At every decision point that warrants a question, keep using the question tool and the per-turn limit in How Many Questions for as long as it remains relevant.
 
 ## Core Principle
 
@@ -82,20 +76,13 @@ Keep the question prompt itself lean: the decision and its options, nothing more
 
 This is the strong default for any real decision. A genuinely trivial one-liner does not need the full framing.
 
+If the user can answer in one click or one sentence, you are usually close to the right shape.
+
 ## Dedicated Question Tools
 
 If the harness has a dedicated question tool, question UI, or inline answer mechanism, prefer using it when the question is real and useful.
 
-Why:
-
-- The user can answer inline without waiting for a whole new turn
-- The decision stays attached to the current flow
-- Structured answers can be faster and clearer when the options are real
-- The agent can continue immediately after the blocker is resolved
-
 If the harness does not have such a tool, ask conversationally.
-
-Put the background, tradeoffs, and recommendation in the message text first. Then use the question prompt for the shortest clear decision the user needs to answer.
 
 ## What Makes A Good Question
 
@@ -142,7 +129,6 @@ If you use a dedicated question tool or structured question UI:
 - Make the options distinct in consequence, not just wording
 - Keep the options understandable and easy to scan
 - Avoid fake choices and duplicate choices
-- Ask at most two questions at once, and only when both are independent and cheap to answer. Prefer one
 
 ## Option Design
 
@@ -209,15 +195,3 @@ Briefly explain:
 1. What blocked you
 2. What the user can do or answer
 3. What will happen once they respond
-
-## Response Pattern
-
-Use this shape when asking:
-
-1. `What I understand`
-2. `What is still unclear`
-3. `Why this matters`
-4. `My recommendation`, if you have one
-5. `The question`
-
-If the user can answer in one click or one sentence, you are usually close to the right shape.
