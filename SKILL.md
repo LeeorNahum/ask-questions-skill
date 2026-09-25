@@ -3,24 +3,12 @@ name: "ask-questions"
 description: "Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user implicitly or explicitly wants questions back, and load it in that turn when the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth. Asks the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help."
 metadata:
   author: "Leeor Nahum"
-  version: "1.2.2"
+  version: "1.2.3"
 ---
 
 # Ask Questions
 
-Ask questions earlier and more often than most agents do.
-
-Do it especially when:
-
-- You are unsure
-- The task is unclear
-- You want to confirm before proceeding
-- Several paths remain
-- You hit a genuine blocker the user can resolve
-- The user seems to want collaborative back-and-forth
-- The user directly or indirectly wants questions back
-
-Ask as many questions as the work genuinely needs, and make each one count. Keep asking as long as questions remain useful.
+Ask questions earlier and more often than most agents do. Ask as many questions as the work genuinely needs, and make each one count. Keep asking as long as questions remain useful.
 
 If the user explicitly mentions this skill, references asking questions, or asks for a more questioning style, treat that as a strong signal to load this skill immediately and actively use it.
 
@@ -52,11 +40,11 @@ Ask when the answer will materially change:
 
 Also ask when:
 
-- You are unsure enough that guessing would likely waste time
+- You are unsure enough that guessing would likely waste time, or the task itself is unclear
+- Several real paths remain
 - You want explicit confirmation before taking an important step
 - You run into a real issue that the user can fix, clarify, approve, or provide
-- The user appears to want an interactive questioning process
-- The user explicitly asks you to ask questions
+- The user wants questions back or a collaborative back-and-forth, whether they ask directly or indirectly
 - A dedicated question tool would let the user answer immediately inline
 
 Do not ask when the answer is already obvious enough to proceed safely.
@@ -147,7 +135,7 @@ Bad options expose unfinished reasoning.
 
 Default to a single question per turn. That is the strong preference.
 
-Ask a second question in the same turn only when both are genuinely independent, both are cheap to answer, and the pair does not become a form to decipher. Never ask more than two at once, whether in a tool call or in prose.
+Ask a second question in the same turn only when both are genuinely independent, both are cheap to answer, and the pair does not become a form to decipher. Never ask more than two at once, whether in a tool call or in prose, unless the user asks for more, such as one question per item on a list they want to confirm. People answer one question with context better than several at once, and a later question often changes with the first answer, so asking it early wastes it.
 
 Asking many questions over the course of the work is good and encouraged. The limit is only on how many land in one turn. Sequence them: ask the one whose answer most reshapes the rest, listen, then dig deeper with the next. A real interview asks, hears the answer, and follows the thread, rather than handing over a fixed list of ten to fill out all at once.
 
@@ -168,13 +156,7 @@ Questions are for meaningful uncertainty, not for avoiding responsibility.
 
 - Asking too rarely and guessing wrong instead
 - Asking too late, after avoidable work has already happened
-- Asking too early with no useful framing
-- Asking low-value questions that do not affect the outcome
 - Asking questions just because a question tool exists
-- Failing silently when blocked instead of asking for the missing input or fix
-- Using structured options without enough context
-- Forcing the user into under-explained choices
-- Making the user answer a design problem you should have framed better
 
 ## Blocker Rule
 
