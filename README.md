@@ -6,7 +6,7 @@ It is for ambiguous or collaborative tasks where the agent should ask more often
 
 It pushes the agent toward useful questions, real options, brief framing, and explicit recommendations instead of passive guessing or empty multiple choice.
 
-For structured question UIs, the skill prefers explaining context in normal chat first, then using the UI only for the concise decision. It also favors iterative followups when each answer shapes the next question.
+The skill asks one decision at a time and keeps going as each answer arrives. Each question carries what the user needs to decide: the current state, what would change, the exact text when the decision is about wording, and a recommendation when there is one.
 
 ## Files
 

@@ -1,9 +1,9 @@
 ---
 name: "ask-questions"
-description: "Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, or the user implicitly or explicitly wants questions back, and load it in that turn when the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth. Asks the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help."
+description: "Use whenever requirements are unclear, multiple paths remain, confidence is low, a real blocker appears, several decisions or open items need the user's answer, or the user implicitly or explicitly wants questions back, and load it in that turn when the user mentions this skill, asks you to ask questions, or asks for a more interactive back-and-forth. Asks the user more useful questions when clarification, confirmation, unblocking, or sharper direction would help."
 metadata:
   author: "Leeor Nahum"
-  version: "1.2.3"
+  version: "2.0.0"
 ---
 
 # Ask Questions
@@ -12,7 +12,7 @@ Ask questions earlier and more often than most agents do. Ask as many questions 
 
 If the user explicitly mentions this skill, references asking questions, or asks for a more questioning style, treat that as a strong signal to load this skill immediately and actively use it.
 
-Once active, you own this behavior for the rest of the thread. The user should not have to restate it. At every decision point that warrants a question, keep using the question tool and the per-turn limit in How Many Questions for as long as it remains relevant.
+Once active, you own this behavior for the rest of the thread. The user should not have to restate it. At every decision point that warrants a question, keep using the question tool and the limit in How Many Questions for as long as it remains relevant.
 
 ## Core Principle
 
@@ -49,18 +49,19 @@ Also ask when:
 
 Do not ask when the answer is already obvious enough to proceed safely.
 
-## Context Before Question
+## Context With The Question
 
-For any decision that carries a recommendation, options, or tradeoffs, explain it in the message text first, then ask. The explanation appears before the question, so the user reads it and answers informed.
+Everything the user needs in order to decide travels inside the prompt, where a prompt is one ask: a single question-tool call, or a single message that asks. With a question tool, the prompt is what the user reads, and text written before the tool call is easily missed.
 
-Before the question, lay out in plain language:
+In plain language, the prompt carries:
 
-1. What you understand
-2. What is still unclear
+1. What you understand, including the current state
+2. What is still unclear, and what would change
 3. Why the answer matters
-4. Your recommendation, if you have one
+4. The exact text, when the decision is about a draft, a message, a command, or any other wording. Show the thing itself, never a description of it
+5. Your recommendation, if you have one
 
-Keep the question prompt itself lean: the decision and its options, nothing more. Context, tradeoffs, and the reasoning behind each option belong in the text, never crammed into the question prompt, no matter the harness. This keeps the prompt from overflowing and lets the user decide with the full picture already in view.
+Make it complete but short: a few sentences plus any exact text, and nothing that would not change the answer. Options say what each choice does. What the user must read before choosing stays in the question text, not anywhere they have to open or look aside to see. Only when the tool cannot hold the material, such as a full document, keep the framing and the passage being decided in the prompt, put the rest in the text just before the tool call, and say so in the prompt.
 
 This is the strong default for any real decision. A genuinely trivial one-liner does not need the full framing.
 
@@ -68,9 +69,11 @@ If the user can answer in one click or one sentence, you are usually close to th
 
 ## Dedicated Question Tools
 
-If the harness has a dedicated question tool, question UI, or inline answer mechanism, prefer using it when the question is real and useful.
+If the harness has a dedicated question tool, question UI, or inline answer mechanism available, ask through it whenever the question is real and useful.
 
-If the harness does not have such a tool, ask conversationally.
+When its answer comes back inside the same turn, chain: ask, read the answer, act on it or note it, then ask the next, and do not end the turn while decisions that need the user remain. Ending the turn on a question written as plain text, or on a report followed by a question about what to do next, is a failure when such a tool is available and can carry the question.
+
+If the harness has no such tool, or the tool cannot carry the question, ask conversationally.
 
 ## What Makes A Good Question
 
@@ -112,8 +115,8 @@ The user should not have to infer your best judgment from the shape of the optio
 
 If you use a dedicated question tool or structured question UI:
 
-- Use it when the answer space is genuinely constrained
-- Include enough context before the options
+- Offer options when the answer space is genuinely constrained, and ask an open question through the same tool when it is not
+- Include the context in the prompt, ahead of the options
 - Make the options distinct in consequence, not just wording
 - Keep the options understandable and easy to scan
 - Avoid fake choices and duplicate choices
@@ -124,6 +127,8 @@ When offering options:
 
 - Write them in user-facing terms
 - Include a recommended default when appropriate
+- Offer few options
+- Leave room for the user's own answer, and add that option when the tool does not provide one
 - Avoid forcing a binary if a hybrid or defer path is more honest
 - Do not make the user choose a standard or implementation shape when the real question is about outcome or priority
 
@@ -133,11 +138,17 @@ Bad options expose unfinished reasoning.
 
 ## How Many Questions
 
-Default to a single question per turn. That is the strong preference.
+Default to a single question per prompt. That is the strong preference.
 
-Ask a second question in the same turn only when both are genuinely independent, both are cheap to answer, and the pair does not become a form to decipher. Never ask more than two at once, whether in a tool call or in prose, unless the user asks for more, such as one question per item on a list they want to confirm. People answer one question with context better than several at once, and a later question often changes with the first answer, so asking it early wastes it.
+Ask a second question in the same prompt only when both belong to the same decision, both are cheap to answer, and the pair does not become a form to decipher. Never ask more than two at once, whether in a tool call or in prose, unless the user asks for more, such as one question per item on a list they want to confirm. People answer one question with context better than several at once, and a later question often changes with the first answer, so asking it early wastes it.
 
-Asking many questions over the course of the work is good and encouraged. The limit is only on how many land in one turn. Sequence them: ask the one whose answer most reshapes the rest, listen, then dig deeper with the next. A real interview asks, hears the answer, and follows the thread, rather than handing over a fixed list of ten to fill out all at once.
+Separate decisions get separate prompts, never one multi-select. Multi-select fits only a single decision whose answer is a set.
+
+Asking many questions over the course of the work is good and encouraged. The limit is only on how many land in one prompt. Sequence them: ask the one whose answer most reshapes the rest, listen, then dig deeper with the next. A real interview asks, hears the answer, and follows the thread, rather than handing over a fixed list of ten to fill out all at once.
+
+Walk a list of open items the same way, one item per prompt, instead of reporting them all and asking once at the end.
+
+When the user's answer is itself a question or a correction, open the next prompt by answering it in a sentence or two, then ask what is still needed, which may be the same decision again.
 
 ## Good Defaults
 
