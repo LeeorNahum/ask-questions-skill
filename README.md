@@ -1,12 +1,10 @@
 # ask-questions-skill
 
-`ask-questions` helps an agent ask earlier, better, and more useful clarifying questions.
+`ask-questions` makes an agent ask through the harness's question tool instead of ending its turn on a report or a question written as plain text.
 
-It is for ambiguous or collaborative tasks where the agent should ask more often when unsure, unclear, or wanting confirmation, and should strongly prefer a dedicated question tool when one exists so the user can answer inline during the same flow.
+Before a turn ends, the agent checks what still waits on the user and asks it. Everything the user needs to read goes inside the question itself, as long as it needs to be: the state that bears on the answer, the full material, the exact text when the decision is about wording, and a recommendation when there is one. Options are only for choosing. Where a tool shows only the start of a long question, the material is split across several questions, one after another, and never trimmed.
 
-It pushes the agent toward useful questions, real options, brief framing, and explicit recommendations instead of passive guessing or empty multiple choice.
-
-The skill asks one decision at a time and keeps going as each answer arrives. Each question carries what the user needs to decide: the current state, what would change, the exact text when the decision is about wording, and a recommendation when there is one.
+It asks one decision at a time, keeps going as each answer arrives, and answers whatever the user typed back before asking the next thing. It does not ask what it can settle itself.
 
 ## Files
 
