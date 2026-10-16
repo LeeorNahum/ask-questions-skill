@@ -3,7 +3,7 @@ name: "ask-questions"
 description: "Use before writing the final message of any turn in which you are waiting on the user: for a decision, an approval, something only they can supply, or their pick among things you found. Not for a turn that finished the job with nothing left to decide. Also use when requirements are unclear or several real paths remain, and load it in that turn when the user mentions this skill, asks for questions, or asked for them earlier in the thread. Asks through the harness's question tool, with everything to read inside the question."
 metadata:
   author: "Leeor Nahum"
-  version: "2.1.0"
+  version: "2.2.0"
 ---
 
 # Ask Questions
@@ -14,7 +14,7 @@ Once the user mentions this skill, asks for questions, or asks for a more questi
 
 ## Ask Through The Tool Before The Turn Ends
 
-Before writing the final message of a turn, check what still waits on the user. If a decision that changes what you do next is waiting, do not end the turn on a report, a summary, or a question written as plain text. Ask through the question tool. When the answer comes back, act on it or note it, then ask the next thing, and end the turn only when nothing more needs the user or the user says to stop.
+Before writing the final message of a turn, check what still waits on the user. If a decision that changes what you do next, an approval, or a step only the user can take is waiting, do not end the turn on a report, a summary, or a question written as plain text. Ask through the question tool. When the answer comes back, act on it or note it, then ask the next thing, and end the turn only when nothing more needs the user or the user says to stop.
 
 - A tool that asks the user and waits for the answer is the question tool whatever its name. It is called AskUserQuestion in Claude Code and request_user_input in Codex, which offers it only in some modes, and differently elsewhere
 - Before concluding there is no question tool, check the whole tool list, including tools that must be loaded or searched for first
@@ -27,7 +27,7 @@ Before writing the final message of a turn, check what still waits on the user. 
 
 The question text is what the user reads. Text written before the tool call is often collapsed or skipped, and the user then answers a question they cannot see the reason for.
 
-Scale the question to the decision. A choice the user can make from one sentence gets that sentence and its options. When the user must read material to decide, such as a draft, a list, numbers, or a comparison, that material goes in the question text in full. Never shorten it, and never swap the thing itself for a sentence describing it.
+Scale the question to the decision. A choice the user can make from one sentence gets that sentence and its options. When the user must read material to decide, such as a draft, a list, numbers, or a comparison, that material goes in the question text in full. Never shorten it, and never swap the thing itself for a sentence describing it. Material already open in front of the user in a viewer is named in the question, not pasted again.
 
 Where they apply, in this order:
 
@@ -35,7 +35,7 @@ Where they apply, in this order:
 2. The current state, only as far as it bears on the answer
 3. The material itself: the items, the facts with their numbers, the exact text of any draft, message, or command
 4. What is still unclear, what would change, and why the answer matters
-5. Your recommendation, if you have one. Do not hide behind neutrality when a recommendation would help the user answer faster
+5. Your recommendation, if you have one. Do not hide behind neutrality when a recommendation would help the user answer faster. Recommend one answer, with its reason and what it costs. The other side may be laid out too, as long as it never reads as a second recommendation, so the user always knows which way you lean
 6. The one question, last
 
 Use plain words the user already uses. A label you invented during the work, a file the user has not seen, or a name for something only you have looked at means nothing to them, so say what the thing is. Blank lines, short labels, and hyphen bullets keep long text readable where formatting does not render.
@@ -44,7 +44,7 @@ Use plain words the user already uses. A label you invented during the work, a f
 
 A question tool may show only the start of a long question and cut the rest without telling you. Claude Code's AskUserQuestion shows the first 2,000 characters of the question text and replaces everything after with an ellipsis. Where a tool's limit is not known, treat 2,000 characters as the limit. The question itself comes last, so it is the first thing a cut removes.
 
-You cannot count characters while writing, so judge by words. In plain prose 300 words is about 1,700 characters, which leaves a margin, so split at 300 words and not before. Commands, paths, code, logs, and tables run far more characters per word. For those, or whenever the size is in doubt and you can run code, measure the text before sending.
+You cannot count characters while writing, so judge by words. In plain prose 300 words is about 1,700 characters, which leaves a margin, so split at 300 words and not before. Commands, paths, code, logs, and tables run far more characters per word. For those, or whenever the size is in doubt and you can run code, measure the text before sending, since a guess is how a question gets cut.
 
 Material that does not fit is split, not shortened:
 
@@ -62,6 +62,7 @@ Options are for choosing, not for reading. Some interfaces collapse or truncate 
 - Offer few options, and leave room for the user's own answer, adding that option when the tool does not provide one
 - Avoid forcing a binary if a hybrid or defer path is more honest
 - Do not make the user choose a standard or implementation shape when the real question is about outcome or priority
+- An option the user has not had explained is explained in the question text. When that would not fit the visible limit, it gets a prompt of its own first, ending in a question about it
 
 Good options reduce cognitive load. Bad options expose unfinished reasoning.
 
@@ -75,6 +76,10 @@ Do not make the user answer a question that you have not framed well enough to a
 - An obvious next step is taken, not offered for permission
 - When a reasonable assumption is safe, state it in a line, continue, and invite correction
 - Never fill a gap with a guess presented as fact. Ask instead
+- Never ask the user to do a step a tool you hold can do. Ask only for what needs their identity, their secret, or their consent
+- Before asking, start everything that does not depend on the answer, and never ask for a go-ahead the user already gave
+- A question that work still running will answer, or whose facts it could change, waits for that work
+- When a step runs against a clock, such as a timed form, collect every answer it needs before starting it
 
 ## How Many Questions
 
@@ -95,4 +100,5 @@ The user often types a full reply into the answer box: a correction, a new reque
 - Do what it asks before anything else
 - Answer every question in it at the top of the next prompt
 - If it changes the decision you asked about, ask that decision again in its new form
+- An answer that makes its approval depend on something, changes the scope, or leaves the approval itself unsettled has not released the step the question was gating. Settle that before starting anything long or hard to stop. An answer that approves and also asks something separate is an approval: answer the question and go on
 - If it says the user could not see or follow something, or that a question was cut off, show that thing in full inside the next question
