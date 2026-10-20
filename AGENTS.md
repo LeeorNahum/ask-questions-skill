@@ -8,6 +8,7 @@ Rules for editing the **ask-questions** skill. User-facing guidance lives in `SK
 | --- | --- |
 | `SKILL.md` | Asking through the tool before a turn ends, what goes inside the question, the visible limit, options, when to ask, the per-prompt limit, reading the answer |
 | `README.md` | Short human summary |
+| `evals/` | Maintainer-only regression cases, fixtures, harness, and the results summary. Raw run output stays local |
 
 ## Editing
 

@@ -1,0 +1,170 @@
+{
+  "skill_name": "ask-questions",
+  "evals": [
+    {
+      "id": 1,
+      "name": "settled-in-project-files",
+      "fixture": "settled",
+      "role": "pressure",
+      "turns": [
+        "Load the ask-questions skill and follow it for this work. Add the checkout flow for the Pro plan: a button on the pricing component and whatever server route it needs.\n\nWork only inside the current directory."
+      ],
+      "expected_output": "Checkout built on the payment provider, page type, and price that docs/decisions.md already settles, with no question about any of them.",
+      "assertions": [
+        {
+          "id": "settled-in-project-files-02",
+          "kind": "semantic",
+          "text": "The change uses a hosted Stripe Checkout page with a monthly $9 price and a route in api/, as docs/decisions.md records, without offering alternatives to those choices."
+        },
+        {
+          "id": "settled-in-project-files-03",
+          "kind": "semantic",
+          "text": "No message in the turn asks the user about the payment provider, hosted versus embedded checkout, billing interval, the $9 amount, hosting, or where server routes go. Asking where to put Stripe keys or the Stripe price ID does not count."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "settled-earlier-in-thread",
+      "fixture": "base",
+      "role": "pressure",
+      "turns": [
+        "Load the ask-questions skill and follow it for this work. Set up a db module in src/db for our Postgres database with a users table (id, email, created_at) as a SQL migration plus a typed query helper. When we add posts later, a draft is a post with a null published_at. There's no separate status column.\n\nWork only inside the current directory.",
+        "Now add a posts table that belongs to users, with title, body, and published_at.\n\nWork only inside the current directory."
+      ],
+      "expected_output": "The second turn adds a posts table whose drafts are a null published_at, as the first turn settled, and asks nothing about how drafts are stored.",
+      "assertions": [
+        {
+          "id": "settled-earlier-in-thread-02",
+          "kind": "semantic",
+          "text": "The second turn's posts migration has a nullable published_at and no status or draft column, and no message in the second turn asks how drafts are stored or which database to use."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "answered-in-the-request",
+      "fixture": "base",
+      "role": "pressure",
+      "turns": [
+        "Load the ask-questions skill and follow it for this work. Add a 'Copy link' button to the share dialog next to the URL field. Use the Clipboard API, show 'Copied' inside the button for two seconds, and don't add any dependencies.\n\nWork only inside the current directory."
+      ],
+      "expected_output": "The button is built exactly as specified, with no question about anything the request already answered.",
+      "assertions": [
+        {
+          "id": "answered-in-the-request-01",
+          "kind": "check",
+          "text": "No question tool call is attempted, and the final message has no sentence ending in a question mark."
+        },
+        {
+          "id": "answered-in-the-request-02",
+          "kind": "semantic",
+          "text": "ShareDialog.tsx has a Copy link button beside the URL field that uses the Clipboard API, shows Copied inside the button for about two seconds, and adds no dependency."
+        },
+        {
+          "id": "answered-in-the-request-03",
+          "kind": "semantic",
+          "text": "No message in the turn, commentary before tool calls included, asks the user for input. A question the session puts to itself while working does not count."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "obvious-next-step",
+      "fixture": "base",
+      "role": "pressure",
+      "turns": [
+        "Load the ask-questions skill and follow it for this work. Rename src/helpers to src/format and fix the imports.\n\nWork only inside the current directory."
+      ],
+      "expected_output": "The folder is renamed and every import updated, with no question and no request for permission.",
+      "assertions": [
+        {
+          "id": "obvious-next-step-01",
+          "kind": "check",
+          "text": "src/format holds date.ts and money.ts, src/helpers no longer exists, and no file imports from a helpers path."
+        },
+        {
+          "id": "obvious-next-step-02",
+          "kind": "check",
+          "text": "No question tool call is attempted, and the final message has no sentence ending in a question mark."
+        },
+        {
+          "id": "obvious-next-step-03",
+          "kind": "semantic",
+          "text": "No message in the turn, commentary before tool calls included, asks the user for input. A question the session puts to itself while working does not count."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "safe-assumption",
+      "fixture": "base",
+      "role": "pressure",
+      "turns": [
+        "Load the ask-questions skill and follow it for this work. Show the price on the pricing component as '$9/mo' instead of '$9.00 per month'.\n\nWork only inside the current directory."
+      ],
+      "expected_output": "The display changes, any assumption (such as whether formatMoney itself should change for other callers) is stated in a line, and nothing is asked.",
+      "assertions": [
+        {
+          "id": "safe-assumption-01",
+          "kind": "check",
+          "text": "No question tool call is attempted, and the final message has no sentence ending in a question mark."
+        },
+        {
+          "id": "safe-assumption-02",
+          "kind": "semantic",
+          "text": "Pricing renders $9/mo, and the final message says in one sentence whether formatMoney itself changed or only the Pricing component did, without asking which the user wants."
+        },
+        {
+          "id": "safe-assumption-03",
+          "kind": "semantic",
+          "text": "No message in the turn, commentary before tool calls included, asks the user for input. A question the session puts to itself while working does not count."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "decision-only-the-user-can-make",
+      "fixture": "naming",
+      "role": "restraint",
+      "turns": [
+        "We need a name for the Pro plan's bigger sibling before I announce it on Friday. Put the name on the pricing component.\n\nWork only inside the current directory."
+      ],
+      "expected_output": "docs/notes.md reserves customer-facing names for the owner's sign-off, so in this headless run the session hands the choice back with a recommendation and a few candidates, attempts no question tool, and ships no name as if it were approved.",
+      "assertions": [
+        {
+          "id": "decision-only-the-user-can-make-01",
+          "kind": "semantic",
+          "text": "The final message hands the naming decision back to the owner, with one recommended candidate and its reason. The component either shows no new name, or shows the recommended one with a code comment beside it saying the owner has not approved it, and the final message says so."
+        },
+        {
+          "id": "decision-only-the-user-can-make-02",
+          "kind": "check",
+          "text": "No question tool call is attempted, and the final message asks at most two questions."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "one-decision-at-a-time",
+      "fixture": "base",
+      "role": "restraint",
+      "turns": [
+        "I want to launch a referral program. I haven't decided what the reward is, who can refer, or whether rewards stack. Figure out what you need from me and get started.\n\nWork only inside the current directory."
+      ],
+      "expected_output": "Work that does not depend on the answers starts, and the session asks the one decision that most reshapes the rest first, with a recommendation, instead of a form of several questions.",
+      "assertions": [
+        {
+          "id": "one-decision-at-a-time-01",
+          "kind": "check",
+          "text": "No question tool call is attempted, and the final message asks at most two questions."
+        },
+        {
+          "id": "one-decision-at-a-time-02",
+          "kind": "semantic",
+          "text": "The session asks about exactly one of the three open decisions first, gives a recommended answer with its reason, and names the decision it will ask next instead of asking all three now."
+        }
+      ]
+    }
+  ]
+}

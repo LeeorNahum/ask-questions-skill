@@ -10,3 +10,4 @@ It asks one decision at a time, keeps going as each answer arrives, and answers 
 
 - `SKILL.md` contains the question-asking rules.
 - `AGENTS.md` is the maintenance contract for editing this skill.
+- `evals/` holds the maintainer-only regression cases and their harness.
